@@ -1,12 +1,33 @@
-#include "activate.h"
-#include <adwaita.h>
+#include "ui.h"
+// #include <adwaita.h>
+#include <gtk/gtk.h>
+
+void activate(GtkApplication *app) {
+  GtkWidget *window = gtk_application_window_new(app);
+  gtk_window_set_title(GTK_WINDOW(window), "Hello");
+  gtk_window_set_default_size(GTK_WINDOW(window), 400, 500);
+  gtk_window_set_decorated(GTK_WINDOW(window), FALSE);
+  gtk_window_set_resizable(GTK_WINDOW(window), FALSE);
+  gtk_window_set_modal(GTK_WINDOW(window), TRUE);
+
+  GtkWidget *ui_wrapper = build_ui_wrapper();
+  gtk_window_set_child(GTK_WINDOW(window), ui_wrapper);
+
+  gtk_window_present(GTK_WINDOW(window));
+}
 
 int main(int argc, char **argv) {
-  g_autoptr(AdwApplication) app = NULL;
+  // g_autoptr(AdwApplication) app = NULL;
+  // app = adw_application_new("org.example.Hello",
+  // G_APPLICATION_DEFAULT_FLAGS); g_signal_connect(app, "activate",
+  // G_CALLBACK(activate), NULL); return g_application_run(G_APPLICATION(app),
+  // argc, argv);
 
-  app = adw_application_new("org.example.Hello", G_APPLICATION_DEFAULT_FLAGS);
-
+  GtkApplication *app =
+      gtk_application_new("com.picker.kao", G_APPLICATION_DEFAULT_FLAGS);
   g_signal_connect(app, "activate", G_CALLBACK(activate), NULL);
+  int status = g_application_run(G_APPLICATION(app), argc, argv);
+  g_object_unref(app);
 
-  return g_application_run(G_APPLICATION(app), argc, argv);
+  return status;
 }
