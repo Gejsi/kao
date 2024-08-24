@@ -3,8 +3,9 @@
 
 #include <gtk/gtk.h>
 
+typedef enum { All, Happy, Sad, Angry, Misc } Expr;
+
 GtkWidget *build_ui_wrapper(void);
-GtkWidget *build_tab(const gchar *category);
-GtkWidget *build_section(const gchar *category, const gchar *section_name);
+GtkWidget *build_scrollable_tab(Expr expr);
 
 #endif // UI_H
