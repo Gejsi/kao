@@ -40,7 +40,15 @@ GtkWidget *build_scrollable_tab(Expr expr) {
 }
 
 void handle_copy(GtkWidget *button, gpointer data) {
-  g_print("Button clicked: %s\n", gtk_button_get_label(GTK_BUTTON(button)));
+  const char *emoji = gtk_button_get_label(GTK_BUTTON(button));
+  GdkDisplay *display = gdk_display_get_default();
+  GdkClipboard *clipboard = gdk_display_get_clipboard(display);
+  GType clipboard_type = gdk_clipboard_get_type();
+
+  gdk_clipboard_set_text(clipboard, emoji);
+
+  // TODO: maybe add a toast notification?
+  g_print("Copied to clipboard: %s\n", emoji);
 }
 
 GtkWidget *build_grid(Expr expr) {
