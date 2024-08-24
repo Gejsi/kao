@@ -1,8 +1,6 @@
 #include "ui.h"
-#include "gtk/gtk.h"
-#include <glib.h>
 
-const int ROOT_SIZE = 16;
+const uint32_t ROOT_SIZE = 16;
 
 GtkWidget *build_ui_wrapper(void) {
   GtkWidget *notebook = gtk_notebook_new();
@@ -56,7 +54,7 @@ GtkWidget *build_grid(Expr expr) {
   gtk_grid_set_row_spacing(GTK_GRID(grid), ROOT_SIZE * 0.5);
   gtk_grid_set_column_spacing(GTK_GRID(grid), ROOT_SIZE * 0.5);
 
-  const int GRID_LENGTH = 3;
+  const uint32_t GRID_LENGTH = 3;
   const gchar *button_labels[GRID_LENGTH][GRID_LENGTH];
 
   if (expr == Happy) {
@@ -91,9 +89,10 @@ GtkWidget *build_grid(Expr expr) {
     button_labels[2][2] = "😑";
   }
 
-  for (int i = 0; i < GRID_LENGTH; i++) {
-    for (int j = 0; j < GRID_LENGTH; j++) {
-      GtkWidget *button = gtk_button_new_with_label(button_labels[i][j]);
+  for (uint32_t i = 0; i < GRID_LENGTH * 4; i++) {
+    for (uint32_t j = 0; j < GRID_LENGTH; j++) {
+      GtkWidget *button =
+          gtk_button_new_with_label(button_labels[i % GRID_LENGTH][j]);
       gtk_widget_set_hexpand(button, TRUE);
       g_signal_connect(button, "clicked", G_CALLBACK(handle_copy), NULL);
       gtk_grid_attach(GTK_GRID(grid), button, j, i, 1, 1);

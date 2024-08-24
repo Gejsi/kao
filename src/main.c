@@ -1,10 +1,9 @@
 #include "ui.h"
 // #include <adwaita.h>
-#include <gtk/gtk.h>
 
 void activate(GtkApplication *app) {
   GtkWidget *window = gtk_application_window_new(app);
-  gtk_window_set_title(GTK_WINDOW(window), "Hello");
+  gtk_window_set_title(GTK_WINDOW(window), "kao");
   gtk_window_set_default_size(GTK_WINDOW(window), 400, 500);
   gtk_window_set_decorated(GTK_WINDOW(window), FALSE);
   gtk_window_set_resizable(GTK_WINDOW(window), FALSE);
@@ -17,14 +16,15 @@ void activate(GtkApplication *app) {
 }
 
 int main(int argc, char **argv) {
+  const char *app_id = "com.picker.kao";
   // g_autoptr(AdwApplication) app = NULL;
-  // app = adw_application_new("org.example.Hello",
+  // app = adw_application_new(app_id,
   // G_APPLICATION_DEFAULT_FLAGS); g_signal_connect(app, "activate",
-  // G_CALLBACK(activate), NULL); return g_application_run(G_APPLICATION(app),
-  // argc, argv);
+  // G_CALLBACK(activate), NULL); return
+  // g_application_run(G_APPLICATION(app), argc, argv);
 
   GtkApplication *app =
-      gtk_application_new("com.picker.kao", G_APPLICATION_DEFAULT_FLAGS);
+      gtk_application_new(app_id, G_APPLICATION_DEFAULT_FLAGS);
   g_signal_connect(app, "activate", G_CALLBACK(activate), NULL);
   int status = g_application_run(G_APPLICATION(app), argc, argv);
   g_object_unref(app);
