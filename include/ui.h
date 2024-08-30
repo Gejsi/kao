@@ -5,6 +5,7 @@
 
 typedef struct {
   AdwToastOverlay *toast_overlay;
+  AdwToast *current_toast;
 } Context;
 
 typedef enum { All, Happy, Sad, Angry, Misc } Expr;

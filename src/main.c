@@ -1,4 +1,3 @@
-#include "glib.h"
 #include "ui.h"
 
 void activate(GtkApplication *app) {

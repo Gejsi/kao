@@ -38,20 +38,34 @@ GtkWidget *build_scrollable_tab(Context *ctx, Expr expr) {
   return scrolled_window;
 }
 
+void handle_toast_dismiss(AdwToast *toast, gpointer data) {
+  Context *ctx = data;
+  ctx->current_toast = NULL;
+}
+
 void handle_copy(GtkWidget *button, gpointer data) {
   Context *ctx = data;
 
   GdkClipboard *clipboard =
       gdk_display_get_clipboard(gdk_display_get_default());
-
   const char *emoji_str = gtk_button_get_label(GTK_BUTTON(button));
 
   gdk_clipboard_set_text(clipboard, emoji_str);
 
+  StringView toast_prefix = StringView_from_cstr("Copied ");
   StringView emoji = StringView_from_cstr(emoji_str);
-  StringView message_suffix = StringView_from_cstr(" copied");
-  StringView toast = StringView_append(&emoji, &message_suffix);
-  adw_toast_overlay_add_toast(ctx->toast_overlay, adw_toast_new(toast.value));
+  StringView toast_msg = StringView_append(&toast_prefix, &emoji);
+
+  if (ctx->current_toast == NULL) {
+    ctx->current_toast = adw_toast_new(toast_msg.value);
+    adw_toast_overlay_add_toast(ctx->toast_overlay, ctx->current_toast);
+    g_signal_connect(ctx->current_toast, "dismissed",
+                     G_CALLBACK(handle_toast_dismiss), ctx);
+  } else {
+    // FIX: put the concatenated toast message, rather than the emoji.
+    // Investigate why StringView_append is causing problems.
+    adw_toast_set_title(ctx->current_toast, emoji.value);
+  }
 }
 
 GtkWidget *build_grid(Context *ctx, Expr expr) {
@@ -65,7 +79,7 @@ GtkWidget *build_grid(Context *ctx, Expr expr) {
   if (expr == Happy) {
     button_labels[0][0] = ":)";
     button_labels[0][1] = ":D";
-    button_labels[0][2] = "（　´_ゝ`）";
+    button_labels[0][2] = "( ﾟдﾟ)";
     button_labels[1][0] = "😄";
     button_labels[1][1] = "( ﾟヮﾟ)";
     button_labels[1][2] = "😃";
@@ -98,6 +112,9 @@ GtkWidget *build_grid(Context *ctx, Expr expr) {
     for (uint32_t j = 0; j < GRID_LENGTH; j++) {
       GtkWidget *button =
           gtk_button_new_with_label(button_labels[i % GRID_LENGTH][j]);
+      gtk_widget_set_size_request(
+          button, (400 - (ROOT_SIZE * 2) - (ROOT_SIZE * 0.5 * GRID_LENGTH)) / 3,
+          50);
       gtk_widget_set_hexpand(button, TRUE);
       g_signal_connect(button, "clicked", G_CALLBACK(handle_copy), ctx);
       gtk_grid_attach(GTK_GRID(grid), button, j, i, 1, 1);
