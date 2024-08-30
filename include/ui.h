@@ -3,10 +3,14 @@
 
 #include "adwaita.h"
 
+typedef struct {
+  AdwToastOverlay *toast_overlay;
+} Context;
+
 typedef enum { All, Happy, Sad, Angry, Misc } Expr;
 
-GtkWidget *build_ui_wrapper(AdwToastOverlay *overlay);
-GtkWidget *build_scrollable_tab(Expr expr, AdwToastOverlay *overlay);
-GtkWidget *build_grid(Expr expr, AdwToastOverlay *overlay);
+GtkWidget *build_ui_wrapper(Context *ctx);
+GtkWidget *build_scrollable_tab(Context *ctx, Expr expr);
+GtkWidget *build_grid(Context *ctx, Expr expr);
 
 #endif // UI_H

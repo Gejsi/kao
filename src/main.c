@@ -1,3 +1,4 @@
+#include "glib.h"
 #include "ui.h"
 
 void activate(GtkApplication *app) {
@@ -7,9 +8,14 @@ void activate(GtkApplication *app) {
   gtk_window_set_decorated(GTK_WINDOW(window), FALSE);
   gtk_window_set_resizable(GTK_WINDOW(window), FALSE);
   gtk_window_set_modal(GTK_WINDOW(window), TRUE);
+  AdwStyleManager *theme = adw_style_manager_get_default();
+  adw_style_manager_set_color_scheme(theme, ADW_COLOR_SCHEME_PREFER_DARK);
 
   AdwToastOverlay *overlay = ADW_TOAST_OVERLAY(adw_toast_overlay_new());
-  GtkWidget *ui_wrapper = build_ui_wrapper(overlay);
+  Context *ctx = g_new0(Context, 1);
+  ctx->toast_overlay = overlay;
+
+  GtkWidget *ui_wrapper = build_ui_wrapper(ctx);
   adw_toast_overlay_set_child(overlay, ui_wrapper);
   gtk_window_set_child(GTK_WINDOW(window), GTK_WIDGET(overlay));
 
