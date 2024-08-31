@@ -1,5 +1,5 @@
 #include "ui.h"
-#include "sv.h"
+#include "hs.h"
 
 const uint32_t ROOT_SIZE = 16;
 
@@ -52,9 +52,10 @@ void handle_copy(GtkWidget *button, gpointer data) {
 
   gdk_clipboard_set_text(clipboard, emoji_str);
 
-  StringView toast_prefix = StringView_from_cstr("Copied ");
-  StringView emoji = StringView_from_cstr(emoji_str);
-  StringView toast_msg = StringView_append(&toast_prefix, &emoji);
+  String toast_msg;
+  String_init(&toast_msg);
+  String_push(&toast_msg, "Copied ");
+  String_push(&toast_msg, emoji_str);
 
   if (ctx->current_toast == NULL) {
     ctx->current_toast = adw_toast_new(toast_msg.value);
@@ -62,10 +63,10 @@ void handle_copy(GtkWidget *button, gpointer data) {
     g_signal_connect(ctx->current_toast, "dismissed",
                      G_CALLBACK(handle_toast_dismiss), ctx);
   } else {
-    // FIX: put the concatenated toast message, rather than the emoji.
-    // Investigate why StringView_append is causing problems.
-    adw_toast_set_title(ctx->current_toast, emoji.value);
+    adw_toast_set_title(ctx->current_toast, toast_msg.value);
   }
+
+  String_free(&toast_msg);
 }
 
 GtkWidget *build_grid(Context *ctx, Expr expr) {

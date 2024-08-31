@@ -1,31 +1,36 @@
-#include "sv.h"
+#include "hs.h"
+#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
-StringView StringView_new(const char *value, unsigned long length) {
-  StringView sv;
-  sv.value = value;
-  sv.length = length;
-  return sv;
+void String_init(String *self) {
+  self->value = NULL;
+  self->length = 0;
 }
 
-StringView StringView_from_cstr(const char *cstr) {
-  return StringView_new(cstr, strlen(cstr));
+void String_free(String *self) {
+  if (self->value != NULL) {
+    free(self->value);
+  }
+  self->value = NULL;
+  self->length = 0;
 }
 
-StringView StringView_append(StringView *a, StringView *b) {
-  char new_value[a->length + b->length + 1]; // +1 for null terminator
+int String_push(String *self, const char *str) {
+  if (!str) {
+    return -1;
+  }
 
-  memcpy(new_value, a->value, a->length);
-  memcpy(new_value + a->length, b->value, b->length);
-  new_value[a->length + b->length] = '\0';
+  size_t str_len = strlen(str);
+  char *new_data = realloc(self->value, self->length + str_len + 1);
 
-  return StringView_new(new_value, a->length + b->length);
-}
-
-bool StringView_equals(StringView *a, StringView *b) {
-  if (a->length != b->length) {
-    return false;
+  if (new_data) {
+    memcpy(new_data + self->length, str, str_len + 1);
+    self->value = new_data;
+    self->length += str_len;
+    return 0;
   } else {
-    return memcmp(a->value, b->value, a->length) == 0;
+    perror("Failed to allocate more memory for the string");
+    return -1;
   }
 }
