@@ -8,6 +8,6 @@ typedef struct {
 
 void String_init(String *self);
 void String_free(String *self);
-int String_push(String *self, const char *str);
+bool String_push(String *self, const char *str);
 
 #endif // HS_H

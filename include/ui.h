@@ -3,6 +3,11 @@
 
 #include "adwaita.h"
 
+#define ROOT_SIZE 16
+#define WINDOW_WIDTH 400
+#define WINDOW_HEIGHT 500
+#define GRID_LENGTH 3
+
 typedef struct {
   AdwToastOverlay *toast_overlay;
   AdwToast *current_toast;

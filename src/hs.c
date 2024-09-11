@@ -12,13 +12,12 @@ void String_free(String *self) {
   if (self->value != NULL) {
     free(self->value);
   }
-  self->value = NULL;
-  self->length = 0;
+  String_init(self);
 }
 
-int String_push(String *self, const char *str) {
+bool String_push(String *self, const char *str) {
   if (!str) {
-    return -1;
+    return false;
   }
 
   size_t str_len = strlen(str);
@@ -28,9 +27,9 @@ int String_push(String *self, const char *str) {
     memcpy(new_data + self->length, str, str_len + 1);
     self->value = new_data;
     self->length += str_len;
-    return 0;
+    return true;
   } else {
     perror("Failed to allocate more memory for the string");
-    return -1;
+    return false;
   }
 }

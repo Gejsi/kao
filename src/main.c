@@ -3,7 +3,7 @@
 void activate(GtkApplication *app) {
   GtkWidget *window = gtk_application_window_new(app);
   gtk_window_set_title(GTK_WINDOW(window), "kao");
-  gtk_window_set_default_size(GTK_WINDOW(window), 400, 500);
+  gtk_window_set_default_size(GTK_WINDOW(window), WINDOW_WIDTH, WINDOW_HEIGHT);
   gtk_window_set_decorated(GTK_WINDOW(window), FALSE);
   gtk_window_set_resizable(GTK_WINDOW(window), FALSE);
   gtk_window_set_modal(GTK_WINDOW(window), TRUE);
